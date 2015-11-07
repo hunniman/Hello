@@ -10,6 +10,8 @@ import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
+import ch.qos.logback.ext.spring.web.LogbackConfigListener;
+
 /* 
  * This class performs the necessary setup of the Spring MVC infrastructure
  */
@@ -22,21 +24,24 @@ public class SpringMvcInitializer implements WebApplicationInitializer {
 		// create a new Spring webapp context and add core listeners for
 		// requests and lifecycle events
 		AnnotationConfigWebApplicationContext webAppContext = new AnnotationConfigWebApplicationContext();
-		servletContext.addListener(RequestContextListener.class);
-		servletContext.addListener(new ContextLoaderListener(webAppContext));
+
+
+        servletContext.addListener(RequestContextListener.class);
+        servletContext.addListener(new ContextLoaderListener(webAppContext));
+        
 		
 		 //Log4jConfigListener  
-        servletContext.setInitParameter("logbackConfigLocation", "classpath:config/logback.xml");  
-        servletContext.addListener(LogbackConfigListener.class);  
-
+//       servletContext.setInitParameter("logbackConfigLocation", "classpath:/config/logback.xml");  
+//       servletContext.addListener(LogbackConfigListener.class);
+       
+       
 		// tell Spring where to find @Configuration classes for further Spring
 		// config
 		webAppContext.setConfigLocation(SPRING_CONFIG_PACKAGE);
-
+		
 		// create Spring's Dispatcher servlet and tell the servletContext it is
 		// present
-		DispatcherServlet dispatcherServlet = new DispatcherServlet(
-				webAppContext);
+		DispatcherServlet dispatcherServlet = new DispatcherServlet(webAppContext);
 		dispatcherServlet.setThrowExceptionIfNoHandlerFound(true);
 		ServletRegistration.Dynamic dispatcher = servletContext.addServlet("dispatcherServlet", dispatcherServlet);
 
@@ -45,34 +50,7 @@ public class SpringMvcInitializer implements WebApplicationInitializer {
 		dispatcher.addMapping("/");
 	}
 
-	//
-	//
-	// @Override
-	// public void onStartup(ServletContext servletContext) throws
-	// ServletException {
-	//
-	// //create a new Spring webapp context and add core listeners for requests
-	// and lifecycle events
-	// AnnotationConfigWebApplicationContext webAppContext = new
-	// AnnotationConfigWebApplicationContext();
-	// servletContext.addListener(RequestContextListener.class);
-	// servletContext.addListener(new ContextLoaderListener(webAppContext));
-	//
-	// //tell Spring where to find @Configuration classes for further Spring
-	// config
-	// webAppContext.setConfigLocation(SPRING_CONFIG_PACKAGE);
-	//
-	// //create Spring's Dispatcher servlet and tell the servletContext it is
-	// present
-	// DispatcherServlet dispatcherServlet = new
-	// DispatcherServlet(webAppContext);
-	// dispatcherServlet.setThrowExceptionIfNoHandlerFound(true);
-	// ServletRegistration.Dynamic dispatcher =
-	// servletContext.addServlet("dispatcherServlet", dispatcherServlet);
-	//
-	// //perform additional dispatcher servlet config
-	// dispatcher.setLoadOnStartup(1);
-	// dispatcher.addMapping("/");
-	// }
+	
+	
 
 }

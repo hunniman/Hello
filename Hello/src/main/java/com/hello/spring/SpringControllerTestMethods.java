@@ -42,4 +42,9 @@ public class SpringControllerTestMethods {
 		@SuppressWarnings("unused")
 		public String getServerLocalTime() {return serverLocalTime;}
 	}
+	
+	@RequestMapping("/showView")
+	public String showView() {
+		return "index.jsp";
+	}
 }

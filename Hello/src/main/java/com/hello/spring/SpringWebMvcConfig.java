@@ -44,7 +44,7 @@ public class SpringWebMvcConfig extends WebMvcConfigurerAdapter {
 		/*****************************/
 //		Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder().indentOutput(true).dateFormat(new SimpleDateFormat("yyyy-MM-dd"));
 		converters.add(new MappingJackson2HttpMessageConverter());
-		converters.add(new MappingJackson2XmlHttpMessageConverter());
+//		converters.add(new MappingJackson2XmlHttpMessageConverter());//xml
 		super.configureMessageConverters(converters);
 	}
 
@@ -55,5 +55,9 @@ public class SpringWebMvcConfig extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
         registry.addResourceHandler("/js/**").addResourceLocations("classpath:/js/");
     }
+    
+    
+    
+    
 
 }

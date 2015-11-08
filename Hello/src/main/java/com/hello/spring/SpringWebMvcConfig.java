@@ -4,6 +4,7 @@ package com.hello.spring;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -13,6 +14,8 @@ import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConve
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.view.JstlView;
+import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
 
 /* 
@@ -20,6 +23,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  * and provides utility configuration not handled elsewhere.
  */
 
+@SuppressWarnings("unused")
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages="com.hello")
@@ -57,6 +61,17 @@ public class SpringWebMvcConfig extends WebMvcConfigurerAdapter {
     }
     
     
+    
+    //名称与实际的页面的映射
+    // return "index" ; 实际返回的页面是/WEB-INF/views/index.jsp
+    @Bean
+    public UrlBasedViewResolver viewResolver(){
+        UrlBasedViewResolver resolver = new UrlBasedViewResolver();
+        resolver.setPrefix("/WEB-INF/views/");
+        resolver.setSuffix(".jsp");
+        resolver.setViewClass(JstlView.class);
+        return resolver;
+    }
     
     
 

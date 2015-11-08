@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 
 @Controller
-@ResponseBody
+//@ResponseBody
 public class SpringControllerTestMethods {
 
 	@RequestMapping("/embeddedTestJson")
-	public TestPageJsonResponse showTestPageJson() {
+	public @ResponseBody TestPageJsonResponse showTestPageJson() {
 		
 		return new TestPageJsonResponse();
 	}
@@ -45,6 +45,8 @@ public class SpringControllerTestMethods {
 	
 	@RequestMapping("/showView")
 	public String showView() {
-		return "index.jsp";
+		return "hello";
 	}
+	
+
 }

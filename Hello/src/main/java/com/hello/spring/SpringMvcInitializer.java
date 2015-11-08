@@ -10,8 +10,6 @@ import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
-import ch.qos.logback.ext.spring.web.LogbackConfigListener;
-
 /* 
  * This class performs the necessary setup of the Spring MVC infrastructure
  */
@@ -48,9 +46,10 @@ public class SpringMvcInitializer implements WebApplicationInitializer {
 		// perform additional dispatcher servlet config
 		dispatcher.setLoadOnStartup(1);
 		dispatcher.addMapping("/");
+		
+		
 	}
 
 	
 	
-
 }

@@ -1,13 +1,24 @@
 package com.hello.jetty;
 
 
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jetty.annotations.AnnotationConfiguration;
 import org.eclipse.jetty.annotations.ClassInheritanceHandler;
+import org.eclipse.jetty.annotations.ServletContainerInitializersStarter;
+import org.eclipse.jetty.apache.jsp.JettyJasperInitializer;
+import org.eclipse.jetty.jsp.JettyJspServlet;
+import org.eclipse.jetty.plus.annotation.ContainerInitializer;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.WebAppContext;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.WebApplicationInitializer;
 
 import com.hello.spring.SpringMvcInitializer;
@@ -33,6 +44,65 @@ public class EmbeddedJetty {
 	     WebAppContext webAppContext = new WebAppContext();
 	     webAppContext.setContextPath("/");
 	     webAppContext.setWelcomeFiles(new String[] {"/static/test.html"});
+	     
+	     /*******************************************hold the jsp**********************************************/
+	     
+	     
+	  // Add JSP Servlet (must be named "jsp")
+	     ServletHolder holderJsp = new ServletHolder("jsp", JettyJspServlet.class);
+	     holderJsp.setInitOrder(0);
+	     holderJsp.setInitParameter("logVerbosityLevel","INFO");
+	     holderJsp.setInitParameter("fork","false");
+	     holderJsp.setInitParameter("xpoweredBy","false");
+	     holderJsp.setInitParameter("compilerTargetVM","1.7");
+	     holderJsp.setInitParameter("compilerSourceVM","1.7");
+	     holderJsp.setInitParameter("keepgenerated","true");
+	     webAppContext.addServlet(holderJsp, "*.jsp");
+	     
+	     
+	     
+	   //Ensure the jsp engine is initialized correctly
+//	     JettyJasperInitializer sci = new JettyJasperInitializer();
+//
+//	     ServletContainerInitializersStarter sciStarter = new ServletContainerInitializersStarter(webAppContext);
+//	     ContainerInitializer initializer = new ContainerInitializer(sci, null);
+//	     List<ContainerInitializer> initializers = new ArrayList<ContainerInitializer>();
+//	     initializers.add(initializer);
+//	     webAppContext.setAttribute("org.eclipse.jetty.containerInitializers", initializers);
+//	     webAppContext.addBean(sciStarter, true);
+
+	     // Set Classloader of Context to be sane (needed for JSTL)
+	     // JSP requires a non-System classloader, this simply wraps the
+	     // embedded System classloader in a way that makes it suitable
+	     // for JSP to use
+	     
+//	     ClassLoader jspClassLoader = new URLClassLoader(new URL[0], EmbeddedJetty.class.getClassLoader());
+//	     webAppContext.setClassLoader(jspClassLoader);
+
+	     // Add JSP Servlet (must be named "jsp")
+//	     ServletHolder holderJsp = new ServletHolder("jsp", JettyJspServlet.class);
+//	     holderJsp.setInitOrder(0);
+//	     holderJsp.setInitParameter("logVerbosityLevel","INFO");
+//	     holderJsp.setInitParameter("fork","false");
+//	     holderJsp.setInitParameter("xpoweredBy","false");
+//	     holderJsp.setInitParameter("compilerTargetVM","1.7");
+//	     holderJsp.setInitParameter("compilerSourceVM","1.7");
+//	     holderJsp.setInitParameter("keepgenerated","true");
+//	     webAppContext.addServlet(holderJsp, "*.jsp");
+//	     
+//	    System.err.print(EmbeddedJetty.class.getResource(""));
+//	 	webAppContext.setResourceBase(EmbeddedJetty.class.getResource("webapp").toURI().toASCIIString());
+	     
+	     
+//	    webAppContext.setContextPath("webapp");
+//	    webAppContext.setConfigurationDiscovered(true);
+//		webAppContext.setParentLoaderPriority(true);
+	     
+	     String ProPath= System.getProperty("user.dir");
+	     webAppContext.setResourceBase(ProPath+"/src/main/webapp");
+	     
+	     /****************************************jsp end ****************************************************/
+//	     webAppContext.addServlet(jspServletHolder(), "*.jsp");
 	     
 	     //tell the webApp about our Spring MVC web initializer. The hoops I jump through here are because
 	     //Jetty 9 AnnotationConfiguration doesn't scan non-jar classpath locations for a class that implements WebApplicationInitializer.
@@ -66,5 +136,21 @@ public class EmbeddedJetty {
 		server.start();
 		server.join();
 	}
+
+	 /**
+     * Create JSP Servlet (must be named "jsp")
+     */
+    private static ServletHolder jspServletHolder()
+    {
+        ServletHolder holderJsp = new ServletHolder("jsp", JettyJspServlet.class);
+        holderJsp.setInitOrder(0);
+        holderJsp.setInitParameter("logVerbosityLevel", "DEBUG");
+        holderJsp.setInitParameter("fork", "false");
+        holderJsp.setInitParameter("xpoweredBy", "false");
+        holderJsp.setInitParameter("compilerTargetVM", "1.7");
+        holderJsp.setInitParameter("compilerSourceVM", "1.7");
+        holderJsp.setInitParameter("keepgenerated", "true");
+        return holderJsp;
+    }
 
 }
